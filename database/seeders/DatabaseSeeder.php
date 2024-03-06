@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            SettingsSeeder::class,
+            // SettingsSeeder::class,
+            UsersTableSeeder::class,
     ]);
     }
 }

@@ -80,7 +80,7 @@ class FormController extends Controller
                 'user_id' => $user_id,
             ]);
 
-            return response()->json(['message' => 'Form created successfully']);
+            return response()->json(['form' => $form]);
         }
 
          //Abdelrhman - Show the form by its id
