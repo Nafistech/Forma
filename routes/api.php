@@ -32,7 +32,7 @@ Route::controller(ApiAuthController::class)->group(function () {
 
 //Abdelrhman - API routes for forms
 Route::controller(FormController::class)->group(function () {
-    Route::get('forms/{userId}','index')->middleware('api_auth');      // method get to restore all forms
+    Route::get('forms/','index')->middleware('api_auth');      // method get to restore all forms
     Route::get('forms/show/{form_id}', "show")->middleware('api_auth');  // method get to restore forms by userId
     Route::post('forms/store', "store")->middleware('api_auth');  // method post to store new forms ($request form_title , form_description , )
     Route::put('forms/{form_id}', "update")->middleware('api_auth');  // method put to update forms by its id (in header method put) , ($request form_title , form_description )

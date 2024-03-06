@@ -3,34 +3,64 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
 
 class FormController extends Controller
 {
         //Abdelrhman - show all forms that created by userId
-        public function index($userId)
+        public function index()
         {
-            // Retrieve all forms created by the user ID
-            $forms = Form::where('user_id', $userId)->get();
+            // Extract the access token from the request headers
+            $access_token = request()->header("access_token");
 
-            // Check if any forms are found for the user
-            if ($forms->isEmpty()) {
-                return response()->json(['message' => 'No forms found for this user'], 404);
+            // Check if the access token is provided
+            if ($access_token !== null) {
+                // Find the user associated with the access token
+                $user = User::where("access_token", $access_token)->first();
+
+                // Check if the user is found
+                if ($user !== null) {
+                    // Retrieve the user ID
+                    $user_id = $user->id;
+
+                    // Retrieve all forms created by the user ID
+                    $forms = Form::where('user_id', $user_id)->get();
+
+                    // Check if any forms are found for the user
+                    if ($forms->isEmpty()) {
+                        return response()->json(['message' => 'No forms found for this user'], 404);
+                    }
+
+                    // Return the forms associated with the user
+                    return response()->json(['forms' => $forms]);
+                } else {
+                    // Access token is not associated with any user
+                    return response()->json(['error' => 'Invalid access token'], 401);
+                }
+            } else {
+                // Access token is not provided
+                return response()->json(['error' => 'Access token not provided'], 401);
             }
-
-            return response()->json(['forms' => $forms]);
         }
 
         //Abdelrhman - create a new form
         public function store(Request $request)
         {
+
+            $access_token=$request->header("access_token");
+            if ($access_token !==null) {
+            $user=User::where("access_token",$access_token)->first();
+            $user_id=$user->id;
+            }
             // Validate form
             $validator = Validator::make($request->all(), [
                 'form_title' => ['required', 'string'],
                 'form_description' => ['nullable', 'string'],
-                'user_id' => ['required', 'numeric'],
             ]);
 
             if ($validator->fails()) {
@@ -47,7 +77,7 @@ class FormController extends Controller
                 'form_id' => $form_id,
                 'form_title' => $request->form_title,
                 'form_description' => $request->form_description,
-                'user_id' => $request->user_id,
+                'user_id' => $user_id,
             ]);
 
             return response()->json(['message' => 'Form created successfully']);
