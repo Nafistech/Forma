@@ -12,8 +12,15 @@ class Setting extends Model
 
     protected $fillable = [
         'form_id',
-        'key',
-        'value' ,
+        'page_header',
+        'page_outro',
+        'logo',
+        'fb_link',
+        'instagram_link',
+        'twitter_link',
+        'bg_color',
+        'text_color',
+        'primary_color',
 
     ];
 

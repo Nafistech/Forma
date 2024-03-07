@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\SubmissiondataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,3 +50,15 @@ Route::controller(FieldController::class)->group(function () {
     Route::put('field/{field_id}', "update")->middleware('api_auth');  // method put to update forms by its id (in header method put) , ($request form_title , form_description )
     Route::delete('field/{field_id}', "destroy")->middleware('api_auth');  // method delete to delete form by its id  (in header method delete)
 });
+
+
+Route::controller(SettingController::class)->group(function(){
+
+    Route::post('settings/{form_id}', "store")->middleware('api_auth'); // method post to store setting by form id
+    Route::put('settings/{form_id}', "update")->middleware('api_auth'); // method post to update setting by form')
+});
+
+
+Route::post('submissions/{form_id}', [SubmissionController::class, 'store']);
+
+Route::post('submissiondata',[SubmissiondataController::class, 'store']);

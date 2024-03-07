@@ -34,7 +34,7 @@ class Form extends Model
 
     public function settings()
     {
-        return $this->hasMany(Setting::class, 'form_id');
+        return $this->belongsTo(Setting::class, 'form_id');
     }
 
     public function user()
