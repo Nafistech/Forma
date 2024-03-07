@@ -27,6 +27,7 @@ class Field extends Model
         'field_placeholder',
         'field_instructions',
         'field_order',
+        'value'
     ];
 
     protected $casts = [

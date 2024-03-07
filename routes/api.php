@@ -2,8 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\FieldController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ApiAuthController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SubmissionController;
@@ -52,13 +54,14 @@ Route::controller(FieldController::class)->group(function () {
 });
 
 
-Route::controller(SettingController::class)->group(function(){
 
-    Route::post('settings/{form_id}', "store")->middleware('api_auth'); // method post to store setting by form id
-    Route::put('settings/{form_id}', "update")->middleware('api_auth'); // method post to update setting by form')
-});
-
+Route::post('settings/{form_id}',[SettingController::class , "storeOrUpdate" ])->middleware('api_auth');
 
 Route::post('submissions/{form_id}', [SubmissionController::class, 'store']);
 
 Route::post('submissiondata',[SubmissiondataController::class, 'store']);
+
+
+Route::post('files', [FileController::class, 'store']);
+
+

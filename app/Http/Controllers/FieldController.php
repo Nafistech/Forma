@@ -23,15 +23,16 @@ class FieldController extends Controller
                 'field_placeholder' => ['nullable', 'string'],
                 'field_instructions' => ['nullable', 'string'],
                 'field_order' => ['required', 'integer'],
+                'value' => ['required', 'string'],
          ]);
 
          if ($validator->fails()) {
              return response()->json([
                  "errors" => $validator->errors()
-             ], 422); // Changed status code to 422 for validation errors
+             ], 422);
          }
 
-         // Generate a random form_id
+         // Generate a random field_id
          $field_id = Str::random(10);
 
          // Create a new form with the generated form_id
@@ -46,6 +47,7 @@ class FieldController extends Controller
              'field_placeholder' => $request->field_placeholder,
              'field_instructions' => $request->field_instructions,
              'field_order' => $request->field_order,
+             'value' => $request->value
          ]);
 
          return response()->json(['message' => 'Filed created successfully']);
@@ -64,6 +66,7 @@ class FieldController extends Controller
             'field_placeholder' => ['nullable', 'string'],
             'field_instructions' => ['nullable', 'string'],
             'field_order' => ['required', 'integer'],
+            'value' => ['required', 'string'],
          ]);
          if($validator->fails())
          {
@@ -89,6 +92,7 @@ class FieldController extends Controller
             'field_placeholder' => $request->field_placeholder,
             'field_instructions' => $request->field_instructions,
             'field_order' => $request->field_order,
+            'value' => $request->value
          ]);
 
          return response()->json(['message' => 'Field Updated successfully']);
