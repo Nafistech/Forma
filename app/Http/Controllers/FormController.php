@@ -31,11 +31,6 @@ class FormController extends Controller
                     // Retrieve all forms created by the user ID
                     $forms = Form::where('user_id', $user_id)->get();
 
-                    // Check if any forms are found for the user
-                    if ($forms->isEmpty()) {
-                        return response()->json(['message' => 'No forms found for this user'], 404);
-                    }
-
                     // Return the forms associated with the user
                     return response()->json(['forms' => $forms]);
                 } else {
@@ -141,15 +136,15 @@ class FormController extends Controller
         //Abdelrhman - delete the form by its id
         public function destroy($id)
         {
-            //Check if the duration exists
-            $duration =Form::find($id);
-            if ($duration == null) {
+            $form = Form::find($id);
+            if ($form) {
+                $form->delete();
+                return response()->json(['message' => 'Form Deleted successfully']);
+            }
+            else{
                 return response()->json([
                     "msg"=>"Form not Found"
-                ],301);
+                ],404);
             }
-              //delete duration
-            $duration->delete();
-            return response()->json(['message' => 'Form Deleted successfully']);
         }
 }

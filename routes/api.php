@@ -28,6 +28,7 @@ Route::controller(ApiAuthController::class)->group(function () {
     Route::post("login", "login");    // login the user to have an access token to access to all the routs
 
     Route::post("logout", "logout")->middleware('api_auth');   // log out the user using his access token
+    Route::get("authorize", "userAuthorize")->middleware('api_auth');   // log out the user using his access token
 });
 
 //Abdelrhman - API routes for forms

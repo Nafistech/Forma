@@ -79,4 +79,18 @@ class ApiAuthController extends Controller
             ]);
         }
     }
+    public function userAuthorize(Request $request)
+    {
+        $access_token=$request->header("access_token");
+        $user=User::where("access_token",$access_token)->first();
+        if ($user !==null) {
+            return response()->json([
+                "user"=> $user
+            ]);
+        }else {
+            return response()->json([
+                "msg"=>"unauthorized"
+            ] , 401);
+        }
+    }
 }
