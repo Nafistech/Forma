@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('form_id');
             $table->foreign('form_id')->references('form_id')->on('forms')->onDelete('cascade');
-            $table->text('page_header');
-            $table->text('page_outro');
+            $table->text('page_header')->nullable();
+            $table->text('page_outro')->nullable();
             $table->string('logo')->nullable();
-            $table->string('fb_link');
-            $table->string('instagram_link');
-            $table->string('twitter_link');
-            $table->string('bg_color');
-            $table->string('text_color');
-            $table->string('primary_color');
+            $table->string('fb_link')->nullable();
+            $table->string('instagram_link')->nullable();
+            $table->string('twitter_link')->nullable();
+            $table->string('bg_color')->nullable();
+            $table->string('text_color')->nullable();
+            $table->string('primary_color')->nullable();
             $table->timestamps();
         });
     }

@@ -32,15 +32,15 @@ class SettingController extends Controller
 
             // Validation
             $validator = Validator::make($request->all(), [
-                'page_header' => ['required', 'string'],
-                'page_outro' => ['required', 'string'],
+                'page_header' => ['nullable', 'string'],
+                'page_outro' => ['nullable', 'string'],
                 'logo' => ['image', 'mimes:jpg,png,jpeg,svg'],
-                'fb_link' => ['required', 'url'],
-                'instagram_link' => ['required', 'url'],
-                'twitter_link' => ['required', 'url'],
-                'bg_color' => ['required', 'string'],
-                'text_color' => ['required', 'string'],
-                'primary_color' => ['required', 'string'],
+                'fb_link' => ['nullable', 'url'],
+                'instagram_link' => ['nullable', 'url'],
+                'twitter_link' => ['nullable', 'url'],
+                'bg_color' => ['nullable', 'string'],
+                'text_color' => ['nullable', 'string'],
+                'primary_color' => ['nullable', 'string'],
             ]);
 
             // If validation fails, return the errors
