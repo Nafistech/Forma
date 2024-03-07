@@ -51,6 +51,7 @@ Route::controller(FieldController::class)->group(function () {
     Route::post('field/store', "store")->middleware('api_auth');  // method post to store new forms ($request form_title , form_description , )
     Route::put('field/{field_id}', "update")->middleware('api_auth');  // method put to update forms by its id (in header method put) , ($request form_title , form_description )
     Route::delete('field/{field_id}', "destroy")->middleware('api_auth');  // method delete to delete form by its id  (in header method delete)
+    Route::post('field/{field_id}' , "reOrder")->middleware('api_auth');
 });
 
 

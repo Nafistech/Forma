@@ -112,4 +112,36 @@ class FieldController extends Controller
           $duration->delete();
           return response()->json(['message' => 'Field Deleted successfully']);
       }
+
+      public function reOrder(Request $request)
+        {
+            $fields=Field::all();
+            // Validation
+            $validator = Validator::make($request->all(), [
+                'field_id' => ['required', 'string'],
+                'field_order' => ['required', 'integer'],
+            ]);
+
+            // If validation fails, return the errors
+            if ($validator->fails()) {
+                return response()->json([
+                    "errors" => $validator->errors()
+                ], 422);
+            }
+
+            // Loop through the fields and update each one
+            foreach ($fields as $field) {
+
+                $requestData = collect($request->fields)->firstWhere('field_id', $field->field_id);
+
+                // Update the field record
+                $field->update([
+                    'field_order' => $requestData['field_order'],
+                ]);
+            }
+
+            // Return a success response
+            return response()->json(['message' => 'Fields updated successfully']);
+        }
+
 }
