@@ -22,7 +22,7 @@ return new class extends Migration
             $table->boolean('isRequired');
             $table->text('field_placeholder')->nullable();
             $table->text('field_instructions')->nullable();
-            $table->text('value');
+            $table->text('value')->nullable();
             $table->integer('field_order');
             $table->timestamps();
         });

@@ -23,7 +23,7 @@ class FieldController extends Controller
                 'field_placeholder' => ['nullable', 'string'],
                 'field_instructions' => ['nullable', 'string'],
                 'field_order' => ['required', 'integer'],
-                'value' => ['required', 'string'],
+                'value' => ['nullable', 'string'],
          ]);
 
          if ($validator->fails()) {
@@ -66,7 +66,7 @@ class FieldController extends Controller
             'field_placeholder' => ['nullable', 'string'],
             'field_instructions' => ['nullable', 'string'],
             'field_order' => ['required', 'integer'],
-            'value' => ['required', 'string'],
+            'value' => ['nullable', 'string'],
          ]);
          if($validator->fails())
          {
