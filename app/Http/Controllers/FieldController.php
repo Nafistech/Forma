@@ -19,7 +19,7 @@ class FieldController extends Controller
                 'field_type' => ['required', 'string'],
                 'field_header' => ['nullable', 'string'],
                 'more_options' => ['nullable', 'json'], // Validate as JSON
-                'isRequired' => ['required', 'boolean'],
+                'isRequired' => ['required'],
                 'field_placeholder' => ['nullable', 'string'],
                 'field_instructions' => ['nullable', 'string'],
                 'field_order' => ['required', 'integer'],
@@ -62,7 +62,7 @@ class FieldController extends Controller
             'field_type' => ['required', 'string'],
             'field_header' => ['nullable', 'string'],
             'more_options' => ['nullable', 'json'], // Validate as JSON
-            'isRequired' => ['required', 'boolean'],
+            'isRequired' => ['required'],
             'field_placeholder' => ['nullable', 'string'],
             'field_instructions' => ['nullable', 'string'],
             'field_order' => ['required', 'integer'],
@@ -72,7 +72,7 @@ class FieldController extends Controller
          {
              return response()->json([
                  "errors"=>$validator->errors()
-             ],301);
+             ], 400);
          }
 
          //Check if the form exists
@@ -80,7 +80,7 @@ class FieldController extends Controller
          if ($form == null) {
              return response()->json([
                  "msg"=>"Field not Found"
-             ],301);
+             ], 404);
          }
          //update the form
          $form->update([

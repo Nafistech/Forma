@@ -50,42 +50,52 @@ class SettingController extends Controller
                 ], 422);
             }
 
-            // Update the setting record
-            $setting->update([
-                'page_header' => $request->page_header,
-                'page_outro' => $request->page_outro,
-                'fb_link' => $request->fb_link,
-                'instagram_link' => $request->instagram_link,
-                'twitter_link' => $request->twitter_link,
-                'bg_color' => $request->bg_color,
-                'text_color' => $request->text_color,
-                'primary_color' => $request->primary_color,
-            ]);
+            if($request->setting_type == "general") {
+                $setting->update([
+                    'bg_color' => $request->bg_color,
+                    'text_color' => $request->text_color,
+                    'primary_color' => $request->primary_color,
+                ]);
+            }
+            if($request->setting_type == "welcomePage") {
+                $setting->update([
+                    'page_header' => $request->page_header,
+                ]);
+            }
+            if($request->setting_type == "endingPage") {
+                $setting->update([
+                    'page_outro' => $request->page_outro,
+                    'fb_link' => $request->fb_link,
+                    'instagram_link' => $request->instagram_link,
+                    'twitter_link' => $request->twitter_link,
+                ]);
+            }
 
             // Check if a file image is in the request and update the logo if present
             if ($request->hasFile('logo')) {
                 $file = $request->file('logo');
-                $fileName = 'logo_' . time() . '.' . $file->getClientOriginalExtension();  // Generate a unique file name
-                Storage::putFileAs('public/assets/settings', $file, $fileName);  // Store the file in its path
-                // Update the company logo name in settings
-                $setting->update(['logo' => $fileName]);
+                $img_path = 'images/logos';
+                $file_name = $file->getClientOriginalName();
+                $path = $file->move($img_path,$file_name);
+                $url = url(asset($path));
+                $setting->update(['logo' => $url]);
             }
 
             // Return a success response
-            return response()->json(['message' => 'Settings updated successfully']);
+            return response()->json(['settings' => $setting]);
         } else {
             // Validation for creating a new record
             $validator = Validator::make($request->all(), [
-                'form_id' => ['required', 'string'],
-                'page_header' => ['required', 'string'],
-                'page_outro' => ['required', 'string'],
+                'form_id' => ['nullable', 'string'],
+                'page_header' => ['nullable', 'string'],
+                'page_outro' => ['nullable', 'string'],
                 'logo' => ['image', 'mimes:jpg,png,jpeg,svg'],
-                'fb_link' => ['required', 'url'],
-                'instagram_link' => ['required', 'url'],
-                'twitter_link' => ['required', 'url'],
-                'bg_color' => ['required', 'string'],
-                'text_color' => ['required', 'string'],
-                'primary_color' => ['required', 'string'],
+                'fb_link' => ['nullable', 'url'],
+                'instagram_link' => ['nullable', 'url'],
+                'twitter_link' => ['nullable', 'url'],
+                'bg_color' => ['nullable', 'string'],
+                'text_color' => ['nullable', 'string'],
+                'primary_color' => ['nullable', 'string'],
             ]);
 
             // If validation fails, return the errors
@@ -111,14 +121,15 @@ class SettingController extends Controller
             // Check if a file image is in the request and store the logo if present
             if ($request->hasFile('logo')) {
                 $file = $request->file('logo');
-                $fileName = 'logo_' . time() . '.' . $file->getClientOriginalExtension();  // Generate a unique file name
-                Storage::putFileAs('public/assets/settings', $file, $fileName);  // Store the file in its path
-                // Update the company logo name in settings
-                $setting->update(['logo' => $fileName]);
+                $img_path = 'images/logos';
+                $file_name = $file->getClientOriginalName();
+                $path = $file->move($img_path,$file_name);
+                $url = url(asset($path));
+                $setting->update(['logo' => $url]);
             }
 
             // Return a success response
-            return response()->json(['message' => 'Settings created successfully']);
+            return response()->json(['settings' => $setting]);
         }
     }
 
