@@ -1,11 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Google\Client;
 use App\Models\File;
+use Google\Service\Drive;
+use Google\Service\Sheets;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Google\Service\Sheets\ValueRange;
+use Google\Service\Sheets\Spreadsheet;
 
 class FileController extends Controller
 {
@@ -40,7 +44,6 @@ class FileController extends Controller
     //     }
     // }
 
-
     public function token()
     {
         try {
@@ -71,7 +74,53 @@ class FileController extends Controller
         }
     }
 
+    public function saveToGoogleSheet(Request $request)
+    {
+        // Initialize Google Client
+        $client = new Client();
+        $client->setAuthConfig(storage_path('app/client_secret_542750891480-o3smbc3hntirhvdij4oenl2sm0k5hqng.apps.googleusercontent.com')); // Path to your credentials JSON file
+        $client->addScope(Drive::DRIVE);
+        $client->addScope(Sheets::SPREADSHEETS);
 
+        // Authenticate and authorize the client
+        $client->setAccessToken($request->session()->get('access_token'));
+
+        // Create Google Drive and Google Sheets Service
+        $driveService = new Drive($client);
+        $sheetsService = new Sheets($client);
+
+        // Create a new Google Sheet
+        $spreadsheet = new Spreadsheet([
+            'properties' => [
+                'title' => 'Responses', // Change the title as needed
+            ],
+        ]);
+        $spreadsheet = $sheetsService->spreadsheets->create($spreadsheet);
+        $spreadsheetId = $spreadsheet->spreadsheetId;
+
+        // Get the range for the data
+        $range = 'Responses'; // Change the sheet name if needed
+
+        // Format data to be inserted into the sheet
+        $values = [
+            [$request->input('field1'),
+             $request->input('field2')
+             , ] // Format your data accordingly
+        ];
+
+        $body = new ValueRange([
+            'values' => $values
+        ]);
+
+        // Insert data into the sheet
+        $result = $sheetsService->spreadsheets_values->update($spreadsheetId, $range, $body, [
+            'valueInputOption' => 'RAW'
+        ]);
+
+        // Handle the result...
+
+        return redirect()->back()->with('success', 'Data saved to Google Sheet successfully.');
+    }
 
     /**
      * Display a listing of the resource.

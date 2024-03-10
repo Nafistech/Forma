@@ -23,6 +23,7 @@ class SettingController extends Controller
         //Abdelrhman - create / update new Settings
     public function storeOrUpdate(Request $request, $form_id)
     {
+        $fileUrl = null;
         // Find the setting record by form_id
         $setting = Setting::where('form_id', $form_id)->first();
 
@@ -66,9 +67,10 @@ class SettingController extends Controller
             if ($request->hasFile('logo')) {
                 $file = $request->file('logo');
                 $fileName = 'logo_' . time() . '.' . $file->getClientOriginalExtension();  // Generate a unique file name
-                Storage::putFileAs('public/assets/settings', $file, $fileName);  // Store the file in its path
+                Storage::putFileAs('public/storage/settings', $file, $fileName);  // Store the file in its path
                 // Update the company logo name in settings
                 $setting->update(['logo' => $fileName]);
+                $fileUrl = Storage::url('public/storage/settings/' . $fileName);
             }
 
             // Return a success response
@@ -112,14 +114,17 @@ class SettingController extends Controller
             if ($request->hasFile('logo')) {
                 $file = $request->file('logo');
                 $fileName = 'logo_' . time() . '.' . $file->getClientOriginalExtension();  // Generate a unique file name
-                Storage::putFileAs('public/assets/settings', $file, $fileName);  // Store the file in its path
+                Storage::putFileAs('public/storage/settings', $file, $fileName);  // Store the file in its path
                 // Update the company logo name in settings
                 $setting->update(['logo' => $fileName]);
+                $fileUrl = Storage::url('public/storage/settings/' . $fileName);
             }
-
+           
             // Return a success response
-            return response()->json(['message' => 'Settings created successfully']);
-        }
+            return response()->json(['
+            message' => 'Settings created successfully',
+             'file_url' => $fileUrl]);
+}
     }
 
 }
