@@ -53,7 +53,7 @@ class FieldController extends Controller
          return response()->json(['message' => 'Filed created successfully']);
      }
 
-     //Abdelrhman - update the field by its id
+
      public function update(Request  $request, $id)
      {
              //validate field
@@ -98,28 +98,28 @@ class FieldController extends Controller
          return response()->json(['message' => 'Field Updated successfully']);
      }
 
-      //Abdelrhman - delete the form by its id
+
       public function destroy($id)
       {
           //Check if the duration exists
-          $duration =Field::find($id);
-          if ($duration == null) {
+          $field =Field::find($id);
+          if ($field == null) {
               return response()->json([
                   "msg"=>"Field not Found"
               ],301);
           }
-            //delete duration
-          $duration->delete();
+            //delete field
+          $field->delete();
           return response()->json(['message' => 'Field Deleted successfully']);
       }
 
+      // Kareem - fields reordering function (sorting fields)
+
       public function reOrder(Request $request)
         {
-            $fields=Field::all();
             // Validation
             $validator = Validator::make($request->all(), [
-                'field_id' => ['required', 'string'],
-                'field_order' => ['required', 'integer'],
+                'fields' => ['array'],
             ]);
 
             // If validation fails, return the errors
@@ -130,14 +130,17 @@ class FieldController extends Controller
             }
 
             // Loop through the fields and update each one
-            foreach ($fields as $field) {
+            foreach ($request->fields as $field) {
 
-                $requestData = collect($request->fields)->firstWhere('field_id', $field->field_id);
-
-                // Update the field record
-                $field->update([
-                    'field_order' => $requestData['field_order'],
-                ]);
+                $TargetField = Field::find($field['field_id']);
+                if ($TargetField == null) {
+                    continue;
+                }
+                else{
+                    $TargetField->update([
+                        'field_order' => $field['field_order']
+                    ]);
+                }
             }
 
             // Return a success response
