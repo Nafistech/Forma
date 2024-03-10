@@ -39,7 +39,7 @@ class ApiAuthController extends Controller
 
                 return response()->json([
                     "success" => 'welcome User Logged in successfully',
-                    "access_token" => $access_token    /////////////
+                    "access_token" => $access_token
                 ], 200);
 
             } else {
