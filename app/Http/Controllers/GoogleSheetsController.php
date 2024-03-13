@@ -86,9 +86,9 @@ class GoogleSheetsController extends Controller
             $spreadsheetUrl = "https://docs.google.com/spreadsheets/d/" . $this->documentId . "/edit";
 
             $googleSheet = GoogleSheets::create([
+                'form_id' => $formId,
                 'document_url' => $spreadsheetUrl,
                 'document_id' => $this->documentId,
-                'form_id' => $formId,
             ]);
             $form->update([
                 'google_sheet_id' => $googleSheet->id
@@ -99,6 +99,7 @@ class GoogleSheetsController extends Controller
             return response()->json([
                 'message' => 'Success message!',
                 'spreadsheetUrl' => $spreadsheetUrl,
+                'formId' => $formId,
             ]);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
