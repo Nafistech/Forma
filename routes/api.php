@@ -7,6 +7,7 @@ use App\Http\Controllers\FormController;
 use App\Http\Controllers\FieldController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ApiAuthController;
+use App\Http\Controllers\GoogleSheetsController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\SubmissiondataController;
@@ -40,6 +41,7 @@ Route::controller(ApiAuthController::class)->group(function () {
 Route::controller(FormController::class)->group(function () {
     Route::get('forms/','index')->middleware('api_auth');      // method get to restore all forms
     Route::get('forms/show/{form_id}', "show")->middleware('api_auth');  // method get to restore forms by userId
+    Route::get('forms/submissions/{form_id}', "showWithSubmissions")->middleware('api_auth');  // show form with all it's submissions
     Route::post('forms/store', "store")->middleware('api_auth');  // method post to store new forms ($request form_title , form_description , )
     Route::post('form/reset/{form_id}', "resetForm")->middleware('api_auth');
     Route::put('forms/{form_id}', "update")->middleware('api_auth');  // method put to update forms by its id (in header method put) , ($request form_title , form_description )
@@ -65,5 +67,8 @@ Route::post('submissiondata',[SubmissiondataController::class, 'store']);
 
 
 Route::post('files', [FileController::class, 'store']);
+Route::post('/create-google-sheet/{form_id}', [GoogleSheetsController::class, 'createNewSpreadsheet']);
+Route::post('/googleSheet/grantPermission/{documentId}', [GoogleSheetsController::class, 'grantPermission']);
+Route::post('/appendSheet/{form_id}', [GoogleSheetsController::class, 'appendSheet']);
 
 

@@ -22,4 +22,8 @@ class SubmissionData extends Model
     {
         return $this->belongsTo(Submission::class, 'submission_id', 'submission_id');
     }
+    public function field()
+    {
+        return $this->belongsTo(Field::class , 'field_id' , 'field_id');
+    }
 }
