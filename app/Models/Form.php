@@ -34,7 +34,16 @@ class Form extends Model
 
     public function settings()
     {
-        return $this->belongsTo(Setting::class, 'form_id');
+        return $this->belongsTo(Setting::class, 'form_id' , 'form_id');
+    }
+
+    public function resetForm()
+    {
+        // Delete related fields
+        $this->fields()->delete();
+
+        // Delete related settings
+        $this->settings()->delete();
     }
 
     public function user()

@@ -91,7 +91,7 @@ class FormController extends Controller
 
              // Retrieve related fields, settings, and submissions
              $fields = $form->fields()->get();
-             $settings = $form->settings()->get();
+             $settings = $form->settings;
              $submissions = $form->submissions()->get();
 
              return response()->json([
@@ -139,6 +139,19 @@ class FormController extends Controller
             $form = Form::find($id);
             if ($form) {
                 $form->delete();
+                return response()->json(['message' => 'Form Deleted successfully']);
+            }
+            else{
+                return response()->json([
+                    "msg"=>"Form not Found"
+                ],404);
+            }
+        }
+        public function resetForm($id)
+        {
+            $form = Form::find($id);
+            if ($form) {
+                $form->resetForm();
                 return response()->json(['message' => 'Form Deleted successfully']);
             }
             else{

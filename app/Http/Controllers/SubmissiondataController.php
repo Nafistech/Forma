@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubmissionData;
 use Illuminate\Http\Request;
 use App\Models\Submission_data;
 use Illuminate\Support\Facades\Validator;
@@ -15,7 +16,7 @@ class SubmissiondataController extends Controller
             $validator = Validator::make($request->all(), [
                 'field_id' => ['required', 'string'],
                 'submission_id' => ['required'],
-                'field_value' => ['required', 'string'],
+                'field_value' => ['required', 'json'],
             ]);
 
             // If validation fails, return the errors
@@ -26,7 +27,7 @@ class SubmissiondataController extends Controller
             }
 
            // Create a new submission record
-           $submissionData = Submission_data::create([
+           $submissionData = SubmissionData::create([
                'field_id' => $request->field_id,
                'submission_id' => $request->submission_id,
                'field_value' => $request->field_value

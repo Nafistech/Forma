@@ -41,6 +41,7 @@ Route::controller(FormController::class)->group(function () {
     Route::get('forms/','index')->middleware('api_auth');      // method get to restore all forms
     Route::get('forms/show/{form_id}', "show")->middleware('api_auth');  // method get to restore forms by userId
     Route::post('forms/store', "store")->middleware('api_auth');  // method post to store new forms ($request form_title , form_description , )
+    Route::post('form/reset/{form_id}', "resetForm")->middleware('api_auth');
     Route::put('forms/{form_id}', "update")->middleware('api_auth');  // method put to update forms by its id (in header method put) , ($request form_title , form_description )
     Route::delete('forms/{form_id}', "destroy")->middleware('api_auth');  // method delete to delete form by its id  (in header method delete)
 });
@@ -49,9 +50,9 @@ Route::controller(FormController::class)->group(function () {
 //Abdelrhman - API routes for fields
 Route::controller(FieldController::class)->group(function () {
     Route::post('field/store', "store")->middleware('api_auth');  // method post to store new forms ($request form_title , form_description , )
-    Route::put('field/{field_id}', "update")->middleware('api_auth');  // method put to update forms by its id (in header method put) , ($request form_title , form_description )
+    Route::post('field/{field_id}', "update")->middleware('api_auth');  // method put to update forms by its id (in header method put) , ($request form_title , form_description )
     Route::delete('field/{field_id}', "destroy")->middleware('api_auth');  // method delete to delete form by its id  (in header method delete)
-    Route::post('field/{field_id}' , "reOrder")->middleware('api_auth');
+    Route::post('fields/reorder' , "reOrder")->middleware('api_auth');
 });
 
 
