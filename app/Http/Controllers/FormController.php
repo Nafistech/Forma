@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
+use App\Models\Submission;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class FormController extends Controller
                     $user_id = $user->id;
 
                     // Retrieve all forms created by the user ID
-                    $forms = Form::where('user_id', $user_id)->get();
+                    $forms = Form::with('sheet')->where('user_id', $user_id)->get();
 
                     // Return the forms associated with the user
                     return response()->json(['forms' => $forms]);
@@ -78,7 +79,7 @@ class FormController extends Controller
             return response()->json(['form' => $form]);
         }
 
-         //Abdelrhman - Show the form by its id
+
          public function show($form_id)
         {
              // Find the form by its ID
@@ -92,17 +93,34 @@ class FormController extends Controller
              // Retrieve related fields, settings, and submissions
              $fields = $form->fields()->get();
              $settings = $form->settings;
-             $submissions = $form->submissions()->get();
 
              return response()->json([
                  'form' => $form,
                  'fields' => $fields,
                  'settings' => $settings,
+             ]);
+        }
+         public function showWithSubmissions($form_id)
+        {
+             // Find the form by its ID
+             $form = Form::find($form_id);
+
+             // Check if the form exists
+             if (!$form) {
+                 return response()->json(['message' => 'Form not found'], 404);
+             }
+
+             $fields = $form->fields()->get();
+             $submissions = Submission::where('form_id' , $form_id)->with('submissionData.field')->get();
+
+             return response()->json([
+                 'form' => $form,
+                 'fields' => $fields,
                  'submissions' => $submissions,
              ]);
         }
 
-         //Abdelrhman - update the form by its id
+
          public function update(Request  $request, $id)
         {
                 //validate form

@@ -19,7 +19,7 @@ class Form extends Model
     public $incrementing = false; // Disable auto-incrementing for the primary key
 
     protected $fillable = [
-        'form_id', 'form_title', 'form_description', 'user_id'
+        'form_id', 'form_title', 'form_description', 'user_id' , 'google_sheet_id'
     ];
 
     public function fields()
@@ -35,6 +35,11 @@ class Form extends Model
     public function settings()
     {
         return $this->belongsTo(Setting::class, 'form_id' , 'form_id');
+    }
+
+    public function sheet()
+    {
+        return $this->belongsTo(GoogleSheets::class , 'form_id' , 'form_id');
     }
 
     public function resetForm()
