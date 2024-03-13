@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
+    //Abdelrhman - Access Token
     public function token()
     {
         try {
@@ -63,6 +64,7 @@ class FileController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    //Abdelrhman - Store the file upolad into google drive storage
         public function store(Request $request)
         {
             $validation=$request->validate([
@@ -93,34 +95,38 @@ class FileController extends Controller
                     $uploadedfile->name=$name;
                     $uploadedfile->fileid=$file_id;
                     $uploadedfile->save();
-                    return response ('File upload successful');
-                }else {
-                    return response ('Failed to upload file');
-                }
+
+
+                  $downloadLink = "https://www.googleapis.com/drive/v3/files/{$file_id}?alt=media";
+
+            return response()->json(['message' => 'File upload successful', 'download_link' => $downloadLink]);
+            } else {
+                return response()->json(['message' => 'Failed to upload file'], 500);
+            }
         }
 
+        //Abdelrhman - download the file id from google drive and download it to downloads file
+        public function show(File $file)
+        {
+            $accessToken = $this->token();
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $accessToken,
+            ])->get("https://www.googleapis.com/drive/v3/files/{$file->fileid}?alt=media");
 
-public function show(File $file)
-{
-    $accessToken = $this->token();
-    $response = Http::withHeaders([
-        'Authorization' => 'Bearer ' . $accessToken,
-    ])->get("https://www.googleapis.com/drive/v3/files/{$file->fileid}?alt=media");
+            if ($response->successful()) {
+                $ext = pathinfo($file->name, PATHINFO_EXTENSION);
+                $filePath = '/downloads/' . $file->file_name . '.' . $ext;
 
-    if ($response->successful()) {
-        $ext = pathinfo($file->name, PATHINFO_EXTENSION);
-        $filePath = '/downloads/' . $file->file_name . '.' . $ext;
+                // Save the file content to storage
+                Storage::put($filePath, $response->body());
 
-        // Save the file content to storage
-        Storage::put($filePath, $response->body());
-
-        // Return a download response
-        return Storage::download($filePath);
-    } else {
-        // Handle the case where the request fails
-        return response()->json(['error' => 'Failed to download file'], $response->status());
-    }
-}
+                // Return a download response
+                return Storage::download($filePath);
+            } else {
+                // Handle the case where the request fails
+                return response()->json(['error' => 'Failed to download file'], $response->status());
+            }
+        }
 
 
     /**
