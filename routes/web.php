@@ -21,7 +21,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $files=File::all();
+    return view('dashboard')->with('files', $files);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -30,8 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Route::resource('files',FileController::class);
+Route::resource('files',FileController::class);
 
-Route::post('files', [FileController::class, 'store']);
+//  Route::post('files', [FileController::class, 'store']);
+//  Route::get('files/', [FileController::class, 'show']);
 
 require __DIR__.'/auth.php';

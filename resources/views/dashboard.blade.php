@@ -1,6 +1,6 @@
 <x-app-layout>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-   
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
@@ -36,8 +36,9 @@
                       <button name="file" type="submit" class="btn btn-success">Submit</button>
                 </form>
 
-                {{-- <h1>File downloads</h1> --}}
-                {{-- <table class="table">
+
+                 <h1>File</h1>
+                 <table class="table">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -56,7 +57,7 @@
                       </tr>
                       @endforeach
                     </tbody>
-                </table> --}}
+                </table> 
             </div>
           </div>
         </div>

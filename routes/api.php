@@ -70,5 +70,6 @@ Route::post('files', [FileController::class, 'store']);
 Route::post('/create-google-sheet/{form_id}', [GoogleSheetsController::class, 'createNewSpreadsheet']);
 Route::post('/googleSheet/grantPermission/{documentId}', [GoogleSheetsController::class, 'grantPermission']);
 Route::post('/appendSheet/{form_id}', [GoogleSheetsController::class, 'appendSheet']);
+Route::apiResource('files', FileController::class);
 
 
