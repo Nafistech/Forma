@@ -9,7 +9,7 @@ class GoogleSheets extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'document_url', 'document_id'
+        'document_url', 'document_id' , 'form_id'
     ];
 
 }
