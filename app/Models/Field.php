@@ -38,4 +38,8 @@ class Field extends Model
     {
         return $this->belongsTo(Form::class, 'form_id', 'form_id');
     }
+    public function submissionData()
+    {
+        return $this->hasMany(SubmissionData::class , 'field_id' , 'field_id');
+    }
 }
