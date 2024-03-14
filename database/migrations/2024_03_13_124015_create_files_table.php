@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('files', function (Blueprint $table) {
+            // Abdelrhman
             $table->id();
             $table->string('file_name');
             $table->string('fileid');

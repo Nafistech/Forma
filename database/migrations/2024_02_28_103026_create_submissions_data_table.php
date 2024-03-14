@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('submission_id')->references('submission_id')->on('submissions')->onDelete('cascade');
             $table->string('field_id');
             $table->foreign('field_id')->references('field_id')->on('fields')->onDelete('cascade');
-            $table->json('field_value');
+            $table->text('field_value');
+            $table->text('field_name')->nullable();
             $table->timestamps();
         });
     }

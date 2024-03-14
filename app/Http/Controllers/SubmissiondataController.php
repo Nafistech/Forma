@@ -16,7 +16,8 @@ class SubmissiondataController extends Controller
             $validator = Validator::make($request->all(), [
                 'field_id' => ['required', 'string'],
                 'submission_id' => ['required'],
-                'field_value' => ['required', 'json'],
+                'field_value' => ['required'],
+                'field_name' => ['nullable' , 'string'],
             ]);
 
             // If validation fails, return the errors
@@ -30,7 +31,8 @@ class SubmissiondataController extends Controller
            $submissionData = SubmissionData::create([
                'field_id' => $request->field_id,
                'submission_id' => $request->submission_id,
-               'field_value' => $request->field_value
+               'field_value' => $request->field_value,
+               'field_name' => $request->field_name
            ]);
 
            return response()->json(['Submission Data' => $submissionData]);
