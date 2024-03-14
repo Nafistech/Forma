@@ -103,7 +103,7 @@ class FileController extends Controller
             } else {
                 return response()->json(['message' => 'Failed to upload file'], 500);
             }
-        }
+         }
 
         //Abdelrhman - download the file id from google drive and download it to downloads file
         public function show(File $file)
