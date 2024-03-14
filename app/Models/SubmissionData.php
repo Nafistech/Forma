@@ -16,6 +16,7 @@ class SubmissionData extends Model
         'submission_id',
         'field_id',
         'field_value',
+        'field_name',
     ];
 
     public function submission()
