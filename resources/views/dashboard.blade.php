@@ -17,13 +17,16 @@
         </div>
     </div> --}}
 
+    <a href="{{ route('login.google') }}" class="btn btn-primary">Login with Google</a>
+
+
     <div class="container">
         <div class="card ">
             <div class="card-header">
               Upload Files
             </div>
             <div class="card-body">
-                <form action="/files" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('files.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Name</label>
@@ -57,7 +60,7 @@
                       </tr>
                       @endforeach
                     </tbody>
-                </table> 
+                </table>
             </div>
           </div>
         </div>

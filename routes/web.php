@@ -3,6 +3,7 @@
 use App\Models\File;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\ProfileController;
 
 /*
@@ -32,6 +33,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('files',FileController::class);
+
+
+Route::get("login/google",[LoginController::class,'redirectGoogle'])->name('login.google');
+Route::get("login/google/callback",[LoginController::class,'redirectGoogleCallback']);
 
 //  Route::post('files', [FileController::class, 'store']);
 //  Route::get('files/', [FileController::class, 'show']);
