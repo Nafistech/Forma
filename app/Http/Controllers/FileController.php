@@ -150,6 +150,7 @@ class FileController extends Controller
                     'role' => 'reader',
                     'type' => 'anyone',
                 ]);
+                
 
             if ($permissionResponse->successful()) {
                 // File permissions updated successfully

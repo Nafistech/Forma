@@ -31,6 +31,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //Abdelrhman - API routes for Auth
 Route::controller(ApiAuthController::class)->group(function () {
 
+    Route::post('register',  'register');
+
     Route::post("login", "login");    // login the user to have an access token to access to all the routs
 
     Route::post("logout", "logout")->middleware('api_auth');   // log out the user using his access token

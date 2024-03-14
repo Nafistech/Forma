@@ -65,7 +65,8 @@ public function redirectGoogleCallback()
     $this->_registerOrLoginUser($googleUser);
 
     // Redirect the user to the dashboard
-    return redirect()->route('dashboard');
+    return redirect()->back();
+
 }
 
 

@@ -10,6 +10,38 @@ use Firebase\JWT\JWT;
 
 class ApiAuthController extends Controller
 {
+    public function register(Request $request)
+    {
+            // Validate the request data
+           $validator= Validator::make($request->all(),[
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+
+            if($validator->fails())
+            {
+                return response()->json([
+                    "errors"=>$validator->errors()
+                ],301);
+            }
+
+            $access_token =JWT::encode([
+                'username' => $request->username,
+                'email' => $request->email,
+            ], 'your_secret_key', 'HS256');
+
+            // Create and save the user
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'access_token' => $access_token
+            ]);
+
+            return response()->json(['message' => 'User registered successfully', 'access_token' => $access_token], 201);
+    }
+
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -79,6 +111,7 @@ class ApiAuthController extends Controller
             ]);
         }
     }
+
     public function userAuthorize(Request $request)
     {
         $access_token=$request->header("access_token");
