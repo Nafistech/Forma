@@ -4,12 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
-use GuzzleHttp\Client;
-
-
+use Illuminate\Support\Facades\Http;;
 
 class FileController extends Controller
 {
@@ -151,7 +146,6 @@ class FileController extends Controller
                     'type' => 'anyone',
                 ]);
                 
-
             if ($permissionResponse->successful()) {
                 // File permissions updated successfully
                 $uploadedfile = new File;

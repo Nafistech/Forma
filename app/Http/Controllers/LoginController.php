@@ -82,7 +82,11 @@ public function redirectGoogleCallback()
    $access_token = $response->original['access_token'];
 
    // Redirect the user to the specified URL with the access token
-   return redirect()->to('http://localhost:5173/google/auth/redirect?access_token=' . $access_token);
+   // Construct the redirect URL with the access token
+   $redirectUrl = url('http://localhost:5173/google/auth/redirect?access_token=' . $access_token);
+
+   // Redirect the user to the specified URL
+   return redirect()->to($redirectUrl);
 }
 
 
