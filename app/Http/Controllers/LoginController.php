@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
@@ -24,9 +25,24 @@ class LoginController extends Controller
             $user->google_id= $data->id;
             $user->google_access_token=$data->token;
             $user->google_refresh_token=$data->refreshToken;
+
+            // Generate a JWT token
+            $access_token =JWT::encode([
+                'username' => $data->username,
+                'email' => $data->email,
+            ], 'your_secret_key', 'HS256');
+
+            $user->access_token = $access_token;
             $user->save();
         }
         Auth::login($user);
+        
+        return response()->json([
+            "success" => 'welcome User Logged in successfully',
+            "access_token" => $access_token
+        ], 200);
+
+
     }
 
     public function redirectGoogle()
