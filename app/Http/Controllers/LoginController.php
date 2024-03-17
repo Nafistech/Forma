@@ -36,7 +36,7 @@ class LoginController extends Controller
             $user->save();
         }
         Auth::login($user);
-        
+
         return response()->json([
             "success" => 'welcome User Logged in successfully',
             "access_token" => $access_token
@@ -77,12 +77,12 @@ public function redirectGoogleCallback()
         ]);
     }
 
-    // Register or log in the user
-    $this->_registerOrLoginUser($googleUser);
+   // Register or log in the user and retrieve the access token
+   $response = $this->_registerOrLoginUser($googleUser);
+   $access_token = $response->original['access_token'];
 
-    // Redirect the user to the dashboard
-    return redirect()->back();
-
+   // Redirect the user to the specified URL with the access token
+   return redirect()->to('http://localhost:5173/google/auth/redirect?access_token=' . $access_token);
 }
 
 
