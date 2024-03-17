@@ -75,6 +75,6 @@ Route::post('/appendSheet/{form_id}', [GoogleSheetsController::class, 'appendShe
 //Route::apiResource('files', FileController::class);
 
 Route::get("login/google",[LoginController::class,'redirectGoogle'])->name('login.google');
-// Route::get("login/google/callback",[LoginController::class,'redirectGoogleCallback']);
+Route::get("login/google/callback",[LoginController::class,'redirectGoogleCallback']);
 
 
