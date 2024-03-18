@@ -13,7 +13,7 @@ class Submission extends Model
     protected $primaryKey = 'submission_id';
     public $incrementing = true;
 
-    protected $fillable = ['form_id'];
+    protected $fillable = ['form_id' , 'rating'];
 
     public function form()
     {

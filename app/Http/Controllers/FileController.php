@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;;
 
@@ -115,7 +116,10 @@ class FileController extends Controller
             'file_name' => 'required',
         ]);
 
-        $refreshToken = auth()->user()->google_refresh_token;
+        $access_token = request()->header("access_token");
+        $user = User::where("access_token", $access_token)->first();
+
+        $refreshToken = $user->google_refresh_token;
         $tokens = $this->generateAccessTokenFromRefreshToken($refreshToken);
 
         // Check if access token and refresh token were obtained successfully
@@ -145,7 +149,7 @@ class FileController extends Controller
                     'role' => 'reader',
                     'type' => 'anyone',
                 ]);
-                
+
             if ($permissionResponse->successful()) {
                 // File permissions updated successfully
                 $uploadedfile = new File;
