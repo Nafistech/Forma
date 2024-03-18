@@ -22,29 +22,32 @@ class LoginController extends Controller
             $user = new User();
             $user->name = $data->name;
             $user->email = $data->email;
-            $user->google_id= $data->id;
-            $user->google_access_token=$data->token;
-            $user->google_refresh_token=$data->refreshToken;
-
-            // Generate a JWT token
-            $access_token =JWT::encode([
-                'username' => $data->username,
-                'email' => $data->email,
-            ], 'your_secret_key', 'HS256');
-
-            $user->access_token = $access_token;
-            $user->save();
         }
+
+        // Update or set Google ID, access token, and refresh token
+        $user->google_id = $data->id;
+        $user->google_access_token = $data->token;
+        $user->google_refresh_token = $data->refreshToken;
+
+        // Generate a JWT token
+        $access_token = JWT::encode([
+            'username' => $data->username,
+            'email' => $data->email,
+        ], 'your_secret_key', 'HS256');
+
+        $user->access_token = $access_token;
+        $user->save();
+
+        // Login the user
         Auth::login($user);
 
         return response()->json([
-            "success" => 'welcome User Logged in successfully',
-            "access_token" =>  $user->access_token
+            "success" => 'Welcome! User logged in or registered successfully.',
+            "access_token" => $user->access_token
         ], 200);
-
-
     }
 
+    
     public function redirectGoogle()
 {
     return Socialite::driver('google')
