@@ -67,8 +67,10 @@ Route::post('submissions/{form_id}', [SubmissionController::class, 'store']);
 
 Route::post('submissiondata',[SubmissiondataController::class, 'store']);
 
+Route::post('submission/rate/{submission_id}',[SubmissionController::class, 'rateSubmission'])->middleware('api_auth');
 
-Route::post('files', [FileController::class, 'store']);
+
+Route::post('files', [FileController::class, 'store'])->middleware('api_auth');
 Route::post('/create-google-sheet/{form_id}', [GoogleSheetsController::class, 'createNewSpreadsheet']);
 Route::post('/googleSheet/grantPermission/{documentId}', [GoogleSheetsController::class, 'grantPermission']);
 Route::post('/appendSheet/{form_id}', [GoogleSheetsController::class, 'appendSheet']);
