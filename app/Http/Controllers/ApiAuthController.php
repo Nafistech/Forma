@@ -71,6 +71,7 @@ class ApiAuthController extends Controller
 
                 return response()->json([
                     "success" => 'welcome User Logged in successfully',
+                    "req" => $request->header(),
                     "access_token" => $access_token
                 ], 200);
 
@@ -90,7 +91,7 @@ class ApiAuthController extends Controller
 
     public function logout(Request $request)
     {
-        $access_token=$request->header("access_token");
+        $access_token=$request->header("authorization-token");
         if ($access_token !==null) {
             $user=User::where("access_token",$access_token)->first();
             if ($user !==null) {
@@ -114,7 +115,7 @@ class ApiAuthController extends Controller
 
     public function userAuthorize(Request $request)
     {
-        $access_token=$request->header("access_token");
+        $access_token=$request->header("authorization-token");
         $user=User::where("access_token",$access_token)->first();
         if ($user !==null) {
             return response()->json([

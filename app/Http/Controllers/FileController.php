@@ -116,7 +116,7 @@ class FileController extends Controller
             'file_name' => 'required',
         ]);
 
-        $access_token = request()->header("access_token");
+        $access_token = request()->header("authorization-token");
         $user = User::where("access_token", $access_token)->first();
 
         $refreshToken = $user->google_refresh_token;

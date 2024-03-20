@@ -17,47 +17,33 @@ class LoginController extends Controller
 
     protected function _registerOrLoginUser($data)
     {
-        // Retrieve the access token from the request headers
-        $access_token = request()->header("access_token");
-
-        // Find the user based on the access token
-        $user = User::where("access_token", $access_token)->first();
-
+        $user = User::where("email", '=', $data->email)->first();
         if (!$user) {
-            // If the user does not exist, create a new user instance
             $user = new User();
             $user->name = $data->name;
             $user->email = $data->email;
+            $user->google_id= $data->id;
+            $user->google_access_token=$data->token;
+            $user->google_refresh_token=$data->refreshToken;
 
-            // Generate a JWT token for the new user
-            $access_token = JWT::encode([
+            // Generate a JWT token
+            $access_token =JWT::encode([
                 'username' => $data->username,
                 'email' => $data->email,
             ], 'your_secret_key', 'HS256');
 
-            // Set the generated access token for the new user
             $user->access_token = $access_token;
+            $user->save();
         }
-
-        // Update or set Google ID, access token, and refresh token
-        $user->google_id = $data->id;
-        $user->google_access_token = $data->token;
-        $user->google_refresh_token = $data->refreshToken;
-
-        // Save the user instance to the database
-        $user->save();
-
-        // Log in the user
         Auth::login($user);
 
-        // Return a JSON response indicating success and providing the access token
         return response()->json([
-            "success" => 'Welcome! User logged in or registered successfully.',
-            "access_token" => $user->access_token
+            "success" => 'welcome User Logged in successfully',
+            "access_token" =>  $user->access_token
         ], 200);
+
+
     }
-
-
 
     public function redirectGoogle()
 {

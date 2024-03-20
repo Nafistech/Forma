@@ -20,7 +20,7 @@ class ApiAuth
      //Abdelrhman - handel the user access token to the routes
     public function handle(Request $request, Closure $next): Response
     {
-        $access_token=$request->header("access_token");
+        $access_token=$request->header("authorization-token");
         if ($access_token !==null) {
             $user=User::where("access_token",$access_token)->first();
         if ($user !==null) {

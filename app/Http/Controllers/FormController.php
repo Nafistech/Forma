@@ -17,7 +17,7 @@ class FormController extends Controller
         public function index()
         {
             // Extract the access token from the request headers
-            $access_token = request()->header("access_token");
+            $access_token = request()->header("authorization-token");
 
             // Check if the access token is provided
             if ($access_token !== null) {
@@ -48,7 +48,7 @@ class FormController extends Controller
         public function store(Request $request)
         {
 
-            $access_token=$request->header("access_token");
+            $access_token=$request->header("authorization-token");
             if ($access_token !==null) {
             $user=User::where("access_token",$access_token)->first();
             $user_id=$user->id;
