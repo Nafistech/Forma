@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Form;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;;
 
 class FileController extends Controller
 {
-    //Abdelrhman - Access Token
     public function generateAccessTokenFromRefreshToken($refreshToken)
     {
         try {
@@ -50,77 +50,30 @@ class FileController extends Controller
     }
 
 
-
-// function createGoogleDriveFolder($accessToken)
-//  {
-//     // Define the folder name
-//     $folderName = 'Folder';
-
-//     // Google Drive API endpoint for creating a folder
-//     $url = 'https://www.googleapis.com/drive/v3/files';
-
-//     // Folder metadata
-//     $folderMetadata = [
-//         'name' => $folderName,
-//         'mimeType' => 'application/vnd.google-apps.folder'
-//     ];
-
-//     // Guzzle HTTP client
-//     $client = new Client();
-
-//     // Send a POST request to create the folder
-//     $response = $client->post($url, [
-//         'headers' => [
-//             'Authorization' => 'Bearer ' . $accessToken,
-//             'Content-Type' => 'application/json'
-//         ],
-//         'json' => $folderMetadata
-//     ]);
-
-//     // Check if the request was successful
-//     if ($response->getStatusCode() == 200) {
-//         // Folder created successfully
-//         $responseData = json_decode($response->getBody(), true);
-//         $folderId = $responseData['id'];
-
-//         // Set folder permissions to 'Anyone with the link'
-//         $permissions = [
-//             'role' => 'reader',
-//             'type' => 'anyone'
-//         ];
-
-//         // Google Drive API endpoint for setting folder permissions
-//         $permissionsUrl = "https://www.googleapis.com/drive/v3/files/{$folderId}/permissions";
-
-//         // Send a POST request to set folder permissions
-//         $client->post($permissionsUrl, [
-//             'headers' => [
-//                 'Authorization' => 'Bearer ' . $accessToken,
-//                 'Content-Type' => 'application/json'
-//             ],
-//             'json' => $permissions
-//         ]);
-
-//         // Return the folder ID
-//         return $folderId;
-//     } else {
-//         // Failed to create folder
-//         return null;
-//     }
-// }
-
-     public function store(Request $request)
+     public function store(Request $request , $formId)
     {
         $validation = $request->validate([
             'file' => 'file|required',
             'file_name' => 'required',
         ]);
-
         $access_token = request()->header("authorization-token");
-        $user = User::where("access_token", $access_token)->first();
+        $user = null;
+        $google_refresh_token = null;
+        if($access_token){
+            $user = User::where("access_token", $access_token)->first();
+        }
+        else{
+            $form = Form::findOrFail($formId);
+            $user = $form->user;
+        }
+        if($user->google_refresh_token){
+            $google_refresh_token = $user->google_refresh_token;
+        }
+        else{
+            $google_refresh_token = env('GOOGLE_DRIVE_DEFAULT_REFRESH_TOKEN');
+        }
 
-        $refreshToken = $user->google_refresh_token;
-        $tokens = $this->generateAccessTokenFromRefreshToken($refreshToken);
+        $tokens = $this->generateAccessTokenFromRefreshToken($google_refresh_token);
 
         // Check if access token and refresh token were obtained successfully
         if (!$tokens || !isset($tokens['access_token'])) {

@@ -21,6 +21,7 @@ class Setting extends Model
         'bg_color',
         'text_color',
         'primary_color',
+        'rating',
 
     ];
 

@@ -42,7 +42,7 @@ Route::controller(ApiAuthController::class)->group(function () {
 //Abdelrhman - Kareem - API routes for forms
 Route::controller(FormController::class)->group(function () {
     Route::get('forms/','index')->middleware('api_auth');      // method get to restore all forms
-    Route::get('forms/show/{form_id}', "show")->middleware('api_auth');  // method get to restore forms by userId
+    Route::get('forms/show/{form_id}', "show");  // method get to restore forms by userId
     Route::get('forms/submissions/{form_id}', "showWithSubmissions")->middleware('api_auth');  // show form with all it's submissions
     Route::post('forms/store', "store")->middleware('api_auth');  // method post to store new forms ($request form_title , form_description , )
     Route::post('form/reset/{form_id}', "resetForm")->middleware('api_auth');
@@ -70,7 +70,7 @@ Route::post('submissiondata',[SubmissiondataController::class, 'store']);
 Route::post('submission/rate/{submission_id}',[SubmissionController::class, 'rateSubmission'])->middleware('api_auth');
 
 
-Route::post('files', [FileController::class, 'store'])->middleware('api_auth');
+Route::post('/files/{form_id}', [FileController::class, 'store']);
 Route::post('/create-google-sheet/{form_id}', [GoogleSheetsController::class, 'createNewSpreadsheet']);
 Route::post('/googleSheet/grantPermission/{documentId}', [GoogleSheetsController::class, 'grantPermission']);
 Route::post('/appendSheet/{form_id}', [GoogleSheetsController::class, 'appendSheet']);

@@ -111,11 +111,13 @@ class FormController extends Controller
              }
 
              $fields = $form->fields()->get();
+             $settings = $form->settings;
              $submissions = Submission::where('form_id' , $form_id)->with('submissionData.field')->get();
 
              return response()->json([
                  'form' => $form,
                  'fields' => $fields,
+                 'settings' => $settings,
                  'submissions' => $submissions,
              ]);
         }

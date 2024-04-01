@@ -42,6 +42,7 @@ class SettingController extends Controller
                 'bg_color' => ['nullable', 'string'],
                 'text_color' => ['nullable', 'string'],
                 'primary_color' => ['nullable', 'string'],
+                'rating' => ['nullable', 'json'],
             ]);
 
             // If validation fails, return the errors
@@ -56,6 +57,7 @@ class SettingController extends Controller
                     'bg_color' => $request->bg_color,
                     'text_color' => $request->text_color,
                     'primary_color' => $request->primary_color,
+                    'rating' => $request->rating,
                 ]);
             }
             if($request->setting_type == "welcomePage") {
@@ -97,6 +99,7 @@ class SettingController extends Controller
                 'bg_color' => ['nullable', 'string'],
                 'text_color' => ['nullable', 'string'],
                 'primary_color' => ['nullable', 'string'],
+                'rating' => ['nullable', 'json'],
             ]);
 
             // If validation fails, return the errors
@@ -117,6 +120,7 @@ class SettingController extends Controller
                 'bg_color' => $request->bg_color,
                 'text_color' => $request->text_color,
                 'primary_color' => $request->primary_color,
+                'rating' => $request->rating,
             ]);
 
             // Check if a file image is in the request and store the logo if present
