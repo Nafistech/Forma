@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('text_color')->nullable();
             $table->string('primary_color')->nullable();
             $table->json('rating')->nullable();
+            $table->json('font')->nullable();
             $table->timestamps();
         });
     }

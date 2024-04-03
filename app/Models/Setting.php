@@ -22,7 +22,7 @@ class Setting extends Model
         'text_color',
         'primary_color',
         'rating',
-
+        'font',
     ];
 
 
