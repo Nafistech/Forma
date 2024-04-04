@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Firebase\JWT\JWT;
+use Carbon\Carbon;
 
 class ApiAuthController extends Controller
 {
@@ -39,7 +40,7 @@ class ApiAuthController extends Controller
                 'access_token' => $access_token
             ]);
 
-            return response()->json(['message' => 'User registered successfully', 'access_token' => $access_token], 201);
+            return response()->json(['message' => 'User registered successfully', 'access_token' => $access_token , "user" => $user], 201);
     }
 
     public function login(Request $request)
@@ -56,14 +57,14 @@ class ApiAuthController extends Controller
 
         $user = User::where("email", $request->email)->first();
         if ($user !== null) {
-            $oldpasword = $user->password;
+            $userPassword = $user->password;
 
             $access_token =JWT::encode([
                 'username' => $request->username,
                 'email' => $request->email,
             ], 'your_secret_key', 'HS256');
 
-            $isVerfied = Hash::check($request->password, $oldpasword);
+            $isVerfied = Hash::check($request->password, $userPassword);
             if ($isVerfied) {
                 $user->update([
                     "access_token" => $access_token
@@ -71,8 +72,8 @@ class ApiAuthController extends Controller
 
                 return response()->json([
                     "success" => 'welcome User Logged in successfully',
-                    "req" => $request->header(),
-                    "access_token" => $access_token
+                    "access_token" => $access_token,
+                    "user" => $user
                 ], 200);
 
             } else {
@@ -86,6 +87,66 @@ class ApiAuthController extends Controller
             return response()->json([
                 "error" => "This account does not exist"
             ], 404);
+        }
+    }
+
+    public function updateUser(Request $request) {
+        $access_token = $request->header("authorization-token");
+        $user = User::where("access_token", $access_token)->first(); // Retrieve user before validation
+
+        if ($user !== null) {
+            $validator = Validator::make($request->all(), [
+                "name" => 'nullable|string|max:255',
+                "email" => 'nullable|email|unique:users,email,' . $user->id, // Now $user is available
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(["errors" => $validator->errors()], 422); // Handle validation errors
+            }
+
+            $user->update([
+                "name" => $request->name,
+                "email" => $request->email
+            ]);
+
+            return response()->json(["user" => $user], 200);
+        }
+    }
+
+    public function updateUserPassword(Request $request) {
+        $access_token = $request->header("authorization-token");
+        $user = User::where("access_token", $access_token)->first(); // Retrieve user before validation
+        if ($user !== null) {
+            $validator = Validator::make($request->all(), [
+                "password" => 'required|string|min:8',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(["errors" => $validator->errors()], 422); // Handle validation errors
+            }
+
+            $user->update([
+                'password' => Hash::make($request->password),
+            ]);
+
+            return response()->json(["user" => $user], 200);
+        }
+    }
+
+    public function updateUserProfilePhoto(Request $request){
+        $validator = Validator::make($request->all(), [
+            "img" => 'file',
+        ]);
+        $access_token=$request->header("authorization-token");
+        $user=User::where("access_token",$access_token)->first();
+        if ($user !==null) {
+            $file = $request->file('img');
+            $img_path = 'images/logos';
+            $currentTime = Carbon::now();
+            $file_name = $user->id . '-' . $user->name . $currentTime;
+            $path = $file->move($img_path,$file_name);
+            $url = url(asset($path));
+            $user->update(['img' => $url]);
+            return response()->json([ "user" => $user ],200);
         }
     }
 
