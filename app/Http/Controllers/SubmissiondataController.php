@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class SubmissiondataController extends Controller
 {
-       //Abdelrhman - create Submission Data
+       //Kareem Ayman - create Submission Data
        public function store(Request $request )
        {
             // Validation
@@ -17,24 +17,21 @@ class SubmissiondataController extends Controller
                 'field_id' => ['required', 'string'],
                 'submission_id' => ['required'],
                 'field_value' => ['required'],
-                'field_name' => ['nullable' , 'string'],
+                'field_name' => ['nullable', 'string'],
             ]);
 
-            // If validation fails, return the errors
             if ($validator->fails()) {
-                return response()->json([
-                    "errors" => $validator->errors()
-                ], 422);
+                return response()->json(['errors' => $validator->errors()], 422);
             }
 
-           // Create a new submission record
-           $submissionData = SubmissionData::create([
-               'field_id' => $request->field_id,
-               'submission_id' => $request->submission_id,
-               'field_value' => $request->field_value,
-               'field_name' => $request->field_name
-           ]);
-
-           return response()->json(['Submission Data' => $submissionData]);
+            // Efficiently check for existing record using firstOrCreate
+            $submissionData = SubmissionData::firstOrCreate([
+                'field_id' => $request->field_id,
+                'submission_id' => $request->submission_id,
+            ], [
+                'field_value' => $request->field_value,
+                'field_name' => $request->field_name, 
+            ]);
+            return response()->json(['Submission Data' => $submissionData]);
        }
 }
